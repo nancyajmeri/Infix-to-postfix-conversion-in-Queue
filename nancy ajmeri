@@ -1,0 +1,46 @@
+from queue import Queue
+
+def precedence(op):
+    switch = {
+        '+': 1,
+        '-': 1,
+        '*': 2,
+        '/': 2,
+        '^': 3
+    }
+    return switch.get(op, 0)  
+
+def infix_to_postfix(expression):
+    output = Queue()
+    stack = []
+
+    for char in expression:
+        if char.isalpha() or char.isdigit():
+            output.put(char)
+        elif char == '(':
+            stack.append(char)
+        elif char == ')':
+            while stack and stack[-1] != '(':
+                output.put(stack.pop())
+            stack.pop()
+        else:
+            while stack and precedence(char) <= precedence(stack[-1]):
+                output.put(stack.pop())
+            stack.append(char)
+
+    while stack:
+        output.put(stack.pop())
+
+    postfix = ""
+    while not output.empty():
+        postfix += output.get()
+
+    return postfix
+
+
+expression = "b*(B-C)/D"
+print(f"Infix: {expression}")
+print(f"Postfix: {infix_to_postfix(expression)}")
+print("Here you got your desired output!"+"\nhave a good day")
+
+
